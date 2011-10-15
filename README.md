@@ -16,3 +16,8 @@ and I'm sharing it.
 
 SlicedBread is licensed under the LGPL.
 
+Sample application
+------------------
+
+The sample application is available at ............
+
