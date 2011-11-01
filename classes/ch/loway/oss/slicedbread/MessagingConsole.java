@@ -179,7 +179,7 @@ public class MessagingConsole {
 
                 } catch ( Throwable t)  {
 
-                    String ex = Tools.stringifyException(t);
+                    String ex = SbTools.stringifyException(t);
                     System.out.print(ex);
 
                     send( MsgErrProcessDied.build( processPid, callerPid, t ) );

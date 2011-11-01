@@ -124,13 +124,13 @@ public class FirstTest extends TaskProcess {
 
                     if ( m instanceof MsgError ) {
                         MsgError err = (MsgError) m;
-                        System.out.println( Tools.stringifyException( err.getCause()));
+                        System.out.println( SbTools.stringifyException( err.getCause()));
                     }
 
                 }
             } while (m != null);
         } catch (InterruptedException e) {
-            System.out.println(Tools.stringifyException(e));
+            System.out.println(SbTools.stringifyException(e));
         }
     }
 

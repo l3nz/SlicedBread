@@ -8,7 +8,7 @@ package ch.loway.oss.slicedbread;
  * @author l3nz
  * @since  1.0.0 - Nov 1, 2011
  */
-public class Tools {
+public class SbTools {
 
     public static String stringifyException( Throwable t ) {
         return "TBD";
