@@ -1,2 +1,5 @@
 *.bak
 *.class
+SlicedBread-*.jar
+build/junit_results.xml
+javaDocs/
