@@ -1,6 +1,9 @@
 
 package ch.loway.oss.slicedbread;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Some static tools.
  *
@@ -10,8 +13,40 @@ package ch.loway.oss.slicedbread;
  */
 public class SbTools {
 
-    public static String stringifyException( Throwable t ) {
-        return "TBD";
+    /**
+     * Turns an exception - actually a Throwable - into a String.
+     * It stores the complete stack trace and inner exceptions as well.
+     * Very handy for logging and storing it.
+     *
+     * @param ex The exception
+     * @return A string representation
+     */
+
+
+    public static String stringifyException(Throwable ex) {
+        StringBuilder stThrowable = new StringBuilder();
+        stThrowable.append( "-- Inner Exception --\n" );
+
+        if (ex != null) {
+                stThrowable.append("Exception: ").append(ex.getClass().getName()).append("\n");
+                String stMessage = ex.getMessage();
+
+                if ( stMessage != null) {
+                        stThrowable.append( "Error:\n" );
+                        stThrowable.append( stMessage );
+                }
+
+                StringWriter out = new StringWriter();
+                PrintWriter printOut = new PrintWriter(out);
+                ex.printStackTrace(printOut);
+
+                stThrowable.append( "\nStack trace:\n" );
+                stThrowable.append(out.toString());
+        }
+
+        stThrowable.append( "-- End Inner Exception --\n");
+
+        return stThrowable.toString();
     }
 
 
