@@ -10,10 +10,8 @@ import ch.loway.oss.slicedbread.messages.MsgCommon;
  * This message contains two numeric status codes and one string.
  * general usage for Quick prototying.
  *
- * @version  $Id: MsgActionIds.java,v 1.1 2010/04/10 15:43:25 lenz-mobile Exp $
- * @author   gnu
- * @since    1.x.x - 10-apr-2010
- * @see
+ * @author   l3nz
+ * @since    1.0.0 - Nov 1, 2011
  */
 public class MsgActionIds extends MsgCommon {
 
@@ -69,9 +67,5 @@ public class MsgActionIds extends MsgCommon {
 
 }
 
-// $Log: MsgActionIds.java,v $
-// Revision 1.1  2010/04/10 15:43:25  lenz-mobile
-// no message
-//
-//
+// 
 //

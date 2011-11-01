@@ -21,10 +21,8 @@ import org.apache.log4j.Logger;
  * This object is the singleton console for all MsgTasking needs.
  * This is the only interactions users have with the MsgTasking world.
  *
- * @version  $Id: MessagingConsole.java,v 1.11 2011/05/27 08:56:41 lenz-mobile Exp $
- * @author   gnu
- * @since    1.x.x - 10-apr-2010
- * @see
+ * @author   l3nz
+ * @since    1.0.0 - Nov 1, 2011
  */
 public class MessagingConsole {
 
@@ -326,40 +324,5 @@ public class MessagingConsole {
 
 }
 
-// $Log: MessagingConsole.java,v $
-// Revision 1.11  2011/05/27 08:56:41  lenz-mobile
-// Riconnessione di thread
-//
-// Revision 1.10  2011/05/12 08:23:37  lenz-mobile
-// Eliminazione PID dalla lista code anche quando un processo si chiude a buon fine.
-//
-// Revision 1.9  2010/08/04 16:02:59  lenz-mobile
-// Controlla chiamate attive.... non va
-//
-// Revision 1.8  2010/07/23 17:28:37  lenz-mobile
-// Stampa strack trace
-//
-// Revision 1.7  2010/05/17 14:37:06  lenz-mobile
-// FindBugs
-//
-// Revision 1.6  2010/05/14 17:41:00  lenz-mobile
-// Reset dei messaggi
-//
-// Revision 1.5  2010/05/14 15:19:00  lenz-mobile
-// Prevede NullPointer
-//
-// Revision 1.4  2010/05/09 16:19:21  lenz-mobile
-// Aggiunto metodo statico per la Sleep()
-//
-// Revision 1.3  2010/04/11 11:29:05  lenz-mobile
-// Removed Map Locking by using ConcurrentHashMap.
-// Threads have names now.
-//
-// Revision 1.2  2010/04/10 15:48:14  lenz-mobile
-// Removed -Xlint:unchecked warnings
-//
-// Revision 1.1  2010/04/10 15:43:25  lenz-mobile
-// no message
-//
-//
+// 
 //

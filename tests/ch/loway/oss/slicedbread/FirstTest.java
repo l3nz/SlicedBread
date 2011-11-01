@@ -14,10 +14,8 @@ import org.junit.Test;
  * FirstTest
  *
  *
- * @version  $Id: FirstTest.java,v 1.3 2010/05/15 08:30:20 lenz-mobile Exp $
- * @author   gnu
- * @since    1.x.x - 10-apr-2010
- * @see
+ * @author   l3nz
+ * @since    1.0.0 - Nov 1, 2011
  */
 public class FirstTest extends TaskProcess {
 

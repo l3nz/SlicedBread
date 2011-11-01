@@ -1,0 +1,4 @@
+*.bak
+SlicedBread-*.jar
+build/
+javaDocs/

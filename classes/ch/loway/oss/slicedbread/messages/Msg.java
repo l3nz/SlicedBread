@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package ch.loway.oss.slicedbread.messages;
 
@@ -10,12 +6,10 @@ import ch.loway.oss.slicedbread.containers.PID;
 /**
  * Msg
  *
- * Questo è il messaggio di base, da cui tutti ereditano.
+ * This is our base messaging object, thatis ancestor for every message.
  *
- * @version  $Id: Msg.java,v 1.2 2010/04/14 16:37:15 lenz-mobile Exp $
- * @author   gnu
- * @since    1.x.x - 10-apr-2010
- * @see
+ * @author   l3nz
+ * @since    1.0.0 - Nov 1, 2011
  */
 public class Msg {
 
@@ -115,12 +109,5 @@ public class Msg {
 
 }
 
-// $Log: Msg.java,v $
-// Revision 1.2  2010/04/14 16:37:15  lenz-mobile
-// Imposta recipients
-//
-// Revision 1.1  2010/04/10 15:43:25  lenz-mobile
-// no message
-//
-//
+// 
 //

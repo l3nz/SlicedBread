@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package ch.loway.oss.slicedbread.messages.error;
 
@@ -13,10 +10,8 @@ import ch.loway.oss.slicedbread.messages.MsgError;
  * MsgErrProcessDied
  *
  *
- * @version  $Id: MsgErrUndeliverable.java,v 1.2 2010/05/14 17:21:59 lenz-mobile Exp $
- * @author   gnu
- * @since    1.x.x - 10-apr-2010
- * @see
+ * @author   l3nz
+ * @since    1.0.0 - Nov 1, 2011
  */
 public class MsgErrUndeliverable extends MsgError {
 
@@ -56,12 +51,3 @@ public class MsgErrUndeliverable extends MsgError {
 
 }
 
-// $Log: MsgErrUndeliverable.java,v $
-// Revision 1.2  2010/05/14 17:21:59  lenz-mobile
-// Mostra messaggio originale
-//
-// Revision 1.1  2010/04/10 15:43:25  lenz-mobile
-// no message
-//
-//
-//
