@@ -41,7 +41,7 @@ public class MsgErrUndeliverable extends MsgError {
     // METODO factory
 
     public static MsgErrUndeliverable build(  PID to, Msg source ) {
-        MsgErrUndeliverable m = new MsgErrUndeliverable();
+        final MsgErrUndeliverable m = new MsgErrUndeliverable();
         m.setFromPid( PID.systemPid() );
         m.setToPid(to);
         m.setOriginalMessage(source);

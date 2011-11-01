@@ -22,7 +22,7 @@ public class MsgProcessEnded extends MsgCommon {
     // METODO factory
 
     public static MsgProcessEnded build( PID from, PID to ) {
-        MsgProcessEnded m = new MsgProcessEnded();
+        final MsgProcessEnded m = new MsgProcessEnded();
         m.setFromPid(from);
         m.setToPid(to);
         return m;

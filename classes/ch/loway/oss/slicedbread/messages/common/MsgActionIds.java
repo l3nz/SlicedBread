@@ -55,7 +55,7 @@ public class MsgActionIds extends MsgCommon {
     }
 
     public static MsgActionIds build( PID from, PID to, int c1, int c2, String t) {
-        MsgActionIds m =  new MsgActionIds();
+        final MsgActionIds m =  new MsgActionIds();
         m.setFromPid(from);
         m.setToPid(to);
         m.setCode1(c1);

@@ -19,7 +19,7 @@ public class MsgPleaseStop extends MsgCommon {
     }
 
     public static MsgPleaseStop build( PID from, PID to) {
-        MsgPleaseStop m =  new MsgPleaseStop();
+        final MsgPleaseStop m =  new MsgPleaseStop();
         m.setFromPid(from);
         m.setToPid(to);
         return m;

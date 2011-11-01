@@ -22,7 +22,7 @@ public class MsgErrProcessDied extends MsgError {
     // METODO factory
 
     public static MsgErrProcessDied build( PID from, PID to, Throwable cause ) {
-        MsgErrProcessDied m = new MsgErrProcessDied();
+        final MsgErrProcessDied m = new MsgErrProcessDied();
         m.setFromPid(from);
         m.setToPid(to);
         m.setCause(cause);

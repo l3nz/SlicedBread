@@ -43,6 +43,7 @@ public class MsgErrRejectedMessage extends MsgError {
                 + " [" + message + "]" ;
     }
 
+    // \todo Builder 
 
 }
 
