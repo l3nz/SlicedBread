@@ -1,5 +1,5 @@
 *.bak
 *.class
-build/
+build/junit*.xml
 SlicedBread-*.jar
 javaDocs/
