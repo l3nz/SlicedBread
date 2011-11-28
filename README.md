@@ -16,55 +16,9 @@ and I'm sharing it.
 
 SlicedBread is licensed under the LGPL.
 
-Sample application
-------------------
+The documentation for the project will be held on the GitHub wiki  - you can 
+find it here. https://github.com/l3nz/SlicedBread/wiki
 
-The sample application is available at under the sources as:
+Happy hacking!
 
-----
-		ch.loway.oss.sbDemos.helloWorld.HelloWorld
-----
 
-It basically spawns a couple of threads and sends each a simple message
-so that one prints "Hello" and the other "World".
-
-The output looks something like:
-
-----
-		Hello world starting
-		(Thread A#2) I am thread Thread A (created by Main)
-		(Thread A#2) PRINTING: Hello
-		(Thread A#2) Now Stopping
-		(Thread B#3) I am thread Thread B (created by Main)
-		(Thread B#3) PRINTING: World
-		(Thread B#3) Now Stopping
-		Message found: F:Thread A#2 T:Main#1 - ProcessStarted
-		Message found: F:Thread A#2 T:Main#1 - ProcessEnded 
-		Message found: F:Thread B#3 T:Main#1 - ProcessStarted
-		Message found: F:Thread B#3 T:Main#1 - ProcessEnded 
-----
-
-So if you are curious before some actual docs are released, that is a good place to start.
-
-:-)
-
-You can also run it straight from the JAR artifact, by running it as:
-
-----
-    $ java -cp "lib/log4j-1.2.16.jar;SlicedBread-0.0.1.jar" ch.loway.oss.sbDemos.helloWorld.HelloWorld
-----
-
-The golden rules
-================
-
-* Create your own messages by extending CustomMsg
-* Create immutable builders for your messages, and make them "final", so that 
-  they are always visible on muti-core systems
-* No sharing of mutables - whatever is embedded in an object must either be immutable
-  (and if it is, you can keep references to it) or you must make sure that you keep 
-  no references to it. Best practice would be to use immutable objects, but defensive
-  copying works as well.
-* In order to create a new thread, extend  TaskProcess and implement its run() method to be
-   an infinite loop obeying the PleaseStop message.
-
-This is basically it. Happy hacking!
