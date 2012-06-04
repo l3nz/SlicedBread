@@ -2,17 +2,22 @@
 package ch.loway.oss.slicedbread;
 
 import ch.loway.oss.slicedbread.containers.PID;
+import ch.loway.oss.slicedbread.containers.QueueInfo;
 import ch.loway.oss.slicedbread.messages.Msg;
 import ch.loway.oss.slicedbread.messages.common.MsgProcessEnded;
 import ch.loway.oss.slicedbread.messages.common.MsgProcessStarted;
 import ch.loway.oss.slicedbread.messages.error.MsgErrProcessDied;
 import ch.loway.oss.slicedbread.messages.error.MsgErrUndeliverable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 /**
@@ -28,19 +33,20 @@ public class MessagingConsole {
 
     private static final MessagingConsole me = new MessagingConsole();
 
-    static Logger logger = Logger.getLogger("Messaging");
+    static final Logger logger = LoggerFactory.getLogger(MessagingConsole.class);
 
     public static MessagingConsole getConsole() {
         return me;
     }
 
     /**
-     * Elimina mapping precedenti.
+     * Remove mappings from previous execution in the same JVM / ClassLoader.
+     * Useful e.g. for Unit Testing
      * 
      */
 
     public void reset() {
-        System.out.println( "=========== RESET CONSOLE ================");
+        logger.warn( "=========== SlicedBread console reset ================");
         mQueues.clear();
     }
 
@@ -114,9 +120,26 @@ public class MessagingConsole {
         return null;
     }
 
-//    public Msg receive( PID fromPid, long timeout ) {
-//        return null;
-//    }
+
+
+    /**
+     * Returns all messages without blocking.
+     *
+     * @param myPID
+     * @return
+     */
+
+    public List<Msg> receiveAll( PID myPID ) {
+
+        List<Msg> q = getQueue( myPID );
+        if ( q == null ) {
+            return Collections.EMPTY_LIST;
+        }
+
+        return fetchAllMessages(q);
+    }
+
+
 
     /**
      * Crea un nuovo PID per un thread esistente.
@@ -134,7 +157,7 @@ public class MessagingConsole {
 
 
     /**
-     * Dato il nome univoco, crea una nuova mailbox o la registra.
+     * Given an unique name, creates a new mailbox.
      * 
      * @param uniqueName
      * @return
@@ -192,15 +215,19 @@ public class MessagingConsole {
             }
         };
 
-        new Thread(task, description).start();
+        Thread tx = new Thread(task, description);
+        tx.setDaemon(true);
+        tx.start();
+
+        logger.info( "Thread {} started", description );
 
         return processPid;
 
     }
 
     /**
-     * Cerca un PID dalla descrizione.
-     * Se non c'è, ritorna null.
+     * Look for a PID given the description.
+     * If not found, returns null.
      * 
      * @param description
      * @return
@@ -209,6 +236,34 @@ public class MessagingConsole {
     public PID whois( String description ) {
         return findByDescription(description);
     }
+
+    /**
+     * Get a list of objects that describe the current open mailboxes.
+     *
+     * @return The list of MailBoxes
+     */
+
+    public List<QueueInfo> list() {
+        List<QueueInfo> lQueues = new ArrayList<QueueInfo>();
+
+        for ( PID pid: mQueues.keySet() ) {
+
+            List<Msg> m = getQueue(pid);
+
+            if ( m != null) {
+
+                QueueInfo qi = new QueueInfo();
+                qi.queuePid = pid;
+                qi.queueSize = m.size();
+                lQueues.add(qi);
+            }
+        }
+
+        return lQueues;
+    }
+
+
+
 
     // ====================================================================
     // HashMap delle queues
@@ -318,6 +373,28 @@ public class MessagingConsole {
             }
         }
         return m;
+    }
+
+
+    /**
+     * Ottiene tutti i messaggi in coda,
+     *
+     * @param queue
+     * @return
+     */
+
+    public List<Msg> fetchAllMessages( List<Msg> queue ) {
+
+        List<Msg> out = null;
+        synchronized (queue) {
+            if ( queue.isEmpty() ) {
+                out = Collections.EMPTY_LIST;
+            } else {
+                out = new ArrayList<Msg>( queue );
+                queue.clear();
+            }
+        }
+        return out;
     }
 
 
