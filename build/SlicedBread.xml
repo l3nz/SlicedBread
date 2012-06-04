@@ -52,7 +52,8 @@ webDocs         : ${webDocs}
     <target name="setCompilePath" depends="init">
                 
         <path id="compilePath">
-           <pathelement location="${jarComuni}/log4j-1.2.16.jar"/>
+           <pathelement location="${jarComuni}/slf4j-api-1.6.3.jar"/>
+           <pathelement location="${jarComuni}/slf4j-simple-1.6.3.jar"/>
            <pathelement location="${jarComuni}/junit-4.9b2.jar"/>
         </path>
         <!-- Check classes -->
