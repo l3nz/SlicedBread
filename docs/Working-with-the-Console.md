@@ -150,11 +150,9 @@ Thread safety considerations
 
 The current version of the Console is backed by a ConcurrentHashMap, where
 
-
         Read operations can thus proceed without locking, but rely
         on selected uses of volatiles to ensure that completed
-        write operations performed by other threads are
-        noticed. 
+        write operations performed by other threads are noticed. 
 
 
 So the cross-thread visibility is basically free at the application level. 

@@ -39,10 +39,6 @@ This is a request to a thread to stop as soon as possible.
 
 This message contains two numeric status codes and one string. Handy for quick prototipying.
 
-Custom messages: MsgCustom
---------------------------
-
-This is where you crete your messages from.
 
 Error messages: MsgError
 ------------------------
@@ -60,6 +56,12 @@ TIP: you'd better not use.
 *MsgErrUndeliverable*
 
 The message is undeliverable (no destination mailbox found).
+
+
+Custom messages: MsgCustom
+--------------------------
+
+You extend this calss to create your own application-level messages.
 
 
 

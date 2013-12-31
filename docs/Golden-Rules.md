@@ -1,4 +1,8 @@
 
+The Golden Rules 
+================
+
+
 The golden rules are as follows:
 
 * Create your own messages by extending CustomMsg
