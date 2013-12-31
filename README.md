@@ -25,4 +25,15 @@ The documentation for the project is within the ''docs'' folder.
 
 Happy hacking!
 
-Back to the [SlicedBread Documentation Home Page](docs/Home.md)
+View the [SlicedBread Documentation Home Page](docs/Home.md)
+
+Dependencies
+------------
+
+Requires slf4j.
+
+License
+-------
+
+Licensed under the LGPL.
+
