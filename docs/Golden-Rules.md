@@ -17,6 +17,5 @@ This is basically it. Happy hacking!
 
 
 
-Back [[Home]]
-
+Back to the [SlicedBread Documentation Home Page](Home.md)
 

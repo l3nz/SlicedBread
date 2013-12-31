@@ -9,9 +9,10 @@ On Actors:
 
 * Correct use of ConcurrentHashMap - http://dmy999.com/article/34/correct-use-of-concurrenthashmap
 
-
 * http://prehensiletail.com/blog/2011/11/25/a-jvm-based-developers-reading-list/
 
 * SEDA: An Architecture for Highly Concurrent Server Applications - http://www.eecs.harvard.edu/~mdw/proj/seda/
 
-Back to [[Home]]
+
+
+Back to the [SlicedBread Documentation Home Page](Home.md)

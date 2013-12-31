@@ -21,9 +21,8 @@ and I'm sharing it.
 
 SlicedBread is licensed under the LGPL.
 
-The documentation for the project will be held on the GitHub wiki  - you can 
-find it here: https://github.com/l3nz/SlicedBread/wiki
+The documentation for the project is within the ''docs'' folder.
 
 Happy hacking!
 
-
+Back to the [SlicedBread Documentation Home Page](docs/Home.md)

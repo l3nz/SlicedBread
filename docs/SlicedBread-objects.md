@@ -2,22 +2,26 @@
 One of the design advantages of SlicedBread is that it is very compact, meaning that 
 it uses very few object and so it is easy to learn.
 
-== MessagingConsole
+MessagingConsole
+================
 
 The MessagingConsole is a singleton object that is the core of the SlicedBread library.
-See [[Working with the Console]] to know more.
+See [Working with the Console](Working-with-the-Console.md) to know more.
 
-== PID
+PID
+===
 
 The PID acts as a Process Identifier and as a mailbox identifier at the console level.
 It is basically a string (plus an internal code) used for maintaining process- 
 and mailbox-level identity.
 
-== Message hierarchy
+Message hierarchy
+=================
 
 The base Message object is of type 'Msg'.
 
-=== Common messages: MsgCommon
+Common messages: MsgCommon
+--------------------------
 
 *MsgProcessStarted*
 
@@ -35,11 +39,13 @@ This is a request to a thread to stop as soon as possible.
 
 This message contains two numeric status codes and one string. Handy for quick prototipying.
 
-=== Custom messages: MsgCustom
+Custom messages: MsgCustom
+--------------------------
 
 This is where you crete your messages from.
 
-=== Error messages: MsgError
+Error messages: MsgError
+------------------------
 
 *MsgErrProcessDied*
 
@@ -59,7 +65,6 @@ The message is undeliverable (no destination mailbox found).
 
 ''''
 
-Back to [[Home]]
-
+Back to the [SlicedBread Documentation Home Page](Home.md)
 
 
