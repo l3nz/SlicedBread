@@ -1,14 +1,16 @@
 WARNING: The docs here are quite incomplete. But it should be enough to get you started.
 
-== Getting started:
+Getting started
+===============
 
 - Fork/download the library from GitHub from https://github.com/l3nz/SlicedBread
-- Follow the [[Golden Rules]] when coding
+- Follow the [Golden Rules](GoldenRules.md) when coding
 
 
-== Reference / Tutorials
+Reference / Tutorials
+=====================
 
-- The [[SlicedBread objects]]
+- The [SlicedBread objects](SlicedBread-objects.md)
 - Read [[Working with the Console]]
 - Have a look at the minimal [[Sample application]]
 - Learn more on [[Logging]]
