@@ -1,6 +1,7 @@
 
 package ch.loway.oss.slicedbread;
 
+import ch.loway.oss.slicedbread.containers.MsgQueue;
 import ch.loway.oss.slicedbread.containers.PID;
 import ch.loway.oss.slicedbread.containers.QueueInfo;
 import ch.loway.oss.slicedbread.messages.Msg;
@@ -31,9 +32,11 @@ import org.slf4j.LoggerFactory;
  */
 public class MessagingConsole {
 
+    private static final Logger logger = LoggerFactory.getLogger(MessagingConsole.class);
     private static final MessagingConsole me = new MessagingConsole();
+    private final Map<PID,MsgQueue> mQueues = new ConcurrentHashMap<PID,MsgQueue>();
 
-    static final Logger logger = LoggerFactory.getLogger(MessagingConsole.class);
+    private final static int POLL_EVERY_MS = 10;
 
     public static MessagingConsole getConsole() {
         return me;
@@ -59,46 +62,44 @@ public class MessagingConsole {
      * @return The nummber of messages on the queue it's been delivered to.
      */
     public int send( Msg message ) {
-
-        //System.out.println( "CX:Sending:" + message );
-
         if ( message == null ) {
             return 0;
         }
 
-        logger.trace("S:" + message);
+        logger.trace("S: {}", message);
 
-        List<Msg> q = getQueue( message.getToPid() );
+        MsgQueue q = getQueue( message.getToPid() );
 
-        if ( q == null ) { // if the destination address was not found...
-
-            // we check that the source address is a valid queue
-            List<Msg> q2 = getQueue( message.getFromPid());
-            if ( q2 != null ) {
-                send( MsgErrUndeliverable.build( message.getFromPid(), message) );
-            }
-            return 0;
-            
+        // if the destination address was not found...
+        if ( q == null ) { 
+            returnMsgUndeliverable(message);
+            return 0;           
         }
-
-        return queueMessage( q, message );
-
+        
+        return q.push(message);
     }
 
-    public final int POLL_EVERY_MS = 10;
-    public Msg receive( PID myPid, int timeout ) throws InterruptedException {
-
-        //System.out.println( "CX:recv:" + myPid);
-
+    /**
+     * Gets you a message from a queue.
+     * If the queue is empty, then this call will block for the given timeout (in ms).
+     * If you don't want it blocking, pass 0 as the timeout.
+     *
+     * @param myPid which mailbox to check
+     * @param timeout in milliseconds
+     * @return a messagem, or null if none is found.
+     * @throws InterruptedException
+     */
+    
+    public Msg receive( PID myPid, int timeout ) throws InterruptedException {        
         int timeRemaining = timeout;
 
-        List<Msg> q = getQueue( myPid );
+        MsgQueue q = getQueue( myPid );
         if ( q == null ) {
             return null;
         }
 
         do {
-            Msg message = fetchMessage(q);
+            Msg message = q.pull();
             if ( message == null ) {
 
                 if ( timeRemaining > 0 ) {
@@ -107,36 +108,29 @@ public class MessagingConsole {
                 }
 
             } else {
-                // I found a message at last
-                //System.out.println( "CX:recv:" + myPid + " " + message);
-                logger.trace("R:" + message);
+                // I found a message at last                
+                logger.trace("R: {}", message);
                 return message;
             }
 
         } while ( timeRemaining > 0 );
 
-        // no message was found
-        //System.out.println( "CX:recv:" + myPid + " --- ");
+        // no message was found        
         return null;
     }
 
 
 
     /**
-     * Returns all messages without blocking.
+     * Returns all messages.
      *
      * @param myPID
      * @return
      */
 
     public List<Msg> receiveAll( PID myPID ) {
-
-        List<Msg> q = getQueue( myPID );
-        if ( q == null ) {
-            return Collections.EMPTY_LIST;
-        }
-
-        return fetchAllMessages(q);
+        MsgQueue q = getQueue( myPID );
+        return q.fetchAllMessages();
     }
 
 
@@ -202,14 +196,17 @@ public class MessagingConsole {
 
                 } catch ( Throwable t)  {
 
-                    String ex = SbTools.stringifyException(t);
-                    System.out.print(ex);
-
+                    logger.error("Process " + processPid + " died ", t);
                     send( MsgErrProcessDied.build( processPid, callerPid, t ) );
                     
                 } finally {
 
-                    // \todo mando indietro i messaggi pendenti come "rejected"
+                    // Marking all existing messages as "undeliverable"
+                    MsgQueue myMailbox = getQueue(processPid);
+                    List<Msg> undeliveredMsgs = myMailbox.fetchAllMessages();
+                    for ( Msg m: undeliveredMsgs ) {
+                        returnMsgUndeliverable(m);
+                    }
                     removeQueue(processPid);
                 }
             }
@@ -226,7 +223,7 @@ public class MessagingConsole {
     }
 
     /**
-     * Look for a PID given the description.
+     * Looks up for a PID given its description.
      * If not found, returns null.
      * 
      * @param description
@@ -248,13 +245,12 @@ public class MessagingConsole {
 
         for ( PID pid: mQueues.keySet() ) {
 
-            List<Msg> m = getQueue(pid);
+            MsgQueue m = getQueue(pid);
 
             if ( m != null) {
-
                 QueueInfo qi = new QueueInfo();
                 qi.queuePid = pid;
-                qi.queueSize = m.size();
+                qi.queueSize = -1; //m.size();
                 lQueues.add(qi);
             }
         }
@@ -265,22 +261,32 @@ public class MessagingConsole {
 
 
 
-    // ====================================================================
-    // HashMap delle queues
+    /**
+     * Adds a queue.
+     * If a queue for the same PID alredy exists, the old queue
+     * is discarded.
+     *
+     * This methid requires no synchronization as the map is synchonized.
+     *
+     * @param pid
+     */
 
-    private final Map<PID,List<Msg>> mQueues = new ConcurrentHashMap<PID,List<Msg>>();
+    public void addQueue(PID pid) {
+        if (mQueues.containsKey(pid)) {
+            mQueues.remove(pid);
+        }
 
-    public void addQueue( PID pid ) {
-        //synchronized ( mQueues ) {
-            if ( mQueues.containsKey(pid)) {
-                mQueues.remove(pid);
-            }
-
-            mQueues.put(pid, new LinkedList<Msg>() );
-        //}
+        mQueues.put(pid, new MsgQueue());
     }
 
-    public List<Msg> getQueue( PID pid ) {
+    /**
+     * Gets you a  the list of messages from a queue.
+     * 
+     * @param pid
+     * @return
+     */
+
+    private MsgQueue getQueue( PID pid ) {
         
         if ( pid != null) {
             if ( mQueues.containsKey(pid)) {
@@ -290,12 +296,16 @@ public class MessagingConsole {
         return null;
     }
 
-    public void removeQueue( PID pid ) {
-        //synchronized ( mQueues ) {
-            if ( mQueues.containsKey(pid)) {
-                mQueues.remove(pid);
-            }
-        //}
+    /**
+     * Drops a queue if it exists.
+     * 
+     * @param pid
+     */
+
+    public void removeQueue(PID pid) {
+        if (mQueues.containsKey(pid)) {
+            mQueues.remove(pid);
+        }
     }
 
     public PID findByDescription( String description ) {
@@ -303,7 +313,7 @@ public class MessagingConsole {
         PID res = null;
 
         // TOLGO synchronized ( mQueues ) {
-        // non serve la sincronizzazione per gli oggetti "conbcurrent"
+        // non serve la sincronizzazione per gli oggetti "concurrent"
         //
         //    The view's returned iterator is a "weakly consistent" iterator
         //    that will never throw ConcurrentModificationException, and
@@ -324,80 +334,34 @@ public class MessagingConsole {
         return res;
     }
 
-    // ====================================================================
-    // gestione delle queues
-
-    public int queueMessage( List<Msg> queue, Msg m ) {
-
-        int i = 0;
-        synchronized ( queue ) {
-            queue.add(m);
-            i = queue.size();
-        }
-        return i;
-
-    }
-
     /**
-     * Se non ci sono messaggi, ritorna null.
+     * Returns a message to the sender.
+     * We make sure that there is a valid received.
      *
-     * @param queue
-     * @return
-     */
-    public Msg fetchMessage( List<Msg> queue ) {
-        Msg m = null;
-        synchronized ( queue ) {
-            if ( queue.size() > 0 ) {
-                m = queue.remove(0);
-            }
-        }
-        return m;
-    }
-
-    /**
-     * Se non ci sono messaggi, ritorna null.
-     *
-     * @param queue
-     * @return
-     */
-    public Msg fetchMessageFrom( List<Msg> queue, PID from ) {
-        Msg m = null;
-        synchronized ( queue ) {
-
-            for ( int i = 0; i < queue.size(); i++) {
-                m = queue.get(i);
-                if ( from.equals( m.getFromPid() ) ) {
-                    queue.remove(i);
-                    break;
-                }
-            }
-        }
-        return m;
-    }
-
-
-    /**
-     * Ottiene tutti i messaggi in coda,
-     *
-     * @param queue
-     * @return
+     * @param message
      */
 
-    public List<Msg> fetchAllMessages( List<Msg> queue ) {
+    private void returnMsgUndeliverable(Msg message) {
 
-        List<Msg> out = null;
-        synchronized (queue) {
-            if ( queue.isEmpty() ) {
-                out = Collections.EMPTY_LIST;
+        // Is there a valid receiver?
+        PID sourcePid = message.getFromPid();
+
+        if (sourcePid != null) {
+            // we check that the source address is a valid queue
+            MsgQueue q2 = getQueue(sourcePid);
+
+            if (q2 != null) {
+                Msg error = MsgErrUndeliverable.build(message.getFromPid(), message);
+                q2.push(error);
+
             } else {
-                out = new ArrayList<Msg>( queue );
-                queue.clear();
+                logger.error("Cannot return message to non-existent mailbox {}", sourcePid);
             }
+        } else {
+            logger.error("Cannot return message with empty PID {}", message);
         }
-        return out;
+
     }
-
-
 
 }
 
