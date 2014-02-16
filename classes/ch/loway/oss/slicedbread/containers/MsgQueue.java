@@ -1,7 +1,9 @@
 package ch.loway.oss.slicedbread.containers;
+
 import ch.loway.oss.slicedbread.messages.Msg;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,28 +16,31 @@ import java.util.List;
  */
 public class MsgQueue {
 
-    private final List<Msg> queue = new ArrayList<Msg>();
+    private final List<Msg> queue = new LinkedList<Msg>();
 
     /**
      * Queues a message.
      * @param m
      */
-
-    public synchronized int push(Msg m) {
-        queue.add(m);
-        return queue.size();
+    public int push(Msg m) {
+        synchronized (queue) {
+            queue.add(m);
+            return queue.size();
+        }
     }
 
-   /**
-    * Pulls the oldest message from a queue.
-    * 
-    * @return
-    */
-    public synchronized Msg pull() {
+    /**
+     * Pulls the oldest message from a queue.
+     *
+     * @return
+     */
+    public Msg pull() {
         Msg m = null;
 
-        if (queue.size() > 0) {
-            m = queue.remove(0);
+        synchronized (queue) {
+            if (queue.size() > 0) {
+                m = queue.remove(0);
+            }
         }
         return m;
     }
@@ -45,18 +50,33 @@ public class MsgQueue {
      * 
      * @return
      */
-    public synchronized List<Msg> fetchAllMessages() {
+    public List<Msg> fetchAllMessages() {
 
         List<Msg> lOut = Collections.EMPTY_LIST;
 
-        if (!queue.isEmpty()) {
-            lOut = new ArrayList<Msg>(queue);
-            queue.clear();
+        synchronized (queue) {
+            if (!queue.isEmpty()) {
+                lOut = new ArrayList<Msg>(queue);
+                queue.clear();
+            }
         }
 
         return lOut;
     }
+
+    /**
+     * Gets the size of the mailbox (for debugging purpuses mostly).
+     * 
+     * @return
+     */
+
+    public int size() {
+        int n = 0;
+        synchronized ( queue ) {
+            n = queue.size();
+        }
+        return n;
+    }
+
 }
-
-
 

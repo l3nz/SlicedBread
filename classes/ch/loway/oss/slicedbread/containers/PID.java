@@ -25,7 +25,13 @@ public class PID {
 
     @Override
     public String toString() {
-        return  descr + "#" + pid;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append( descr )
+           .append( '#' )
+           .append( pid );
+
+        return  sb.toString();
     }
 
     // gettr e setter

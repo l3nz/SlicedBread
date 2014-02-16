@@ -10,9 +10,7 @@ import ch.loway.oss.slicedbread.messages.common.MsgProcessStarted;
 import ch.loway.oss.slicedbread.messages.error.MsgErrProcessDied;
 import ch.loway.oss.slicedbread.messages.error.MsgErrUndeliverable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -250,7 +248,7 @@ public class MessagingConsole {
             if ( m != null) {
                 QueueInfo qi = new QueueInfo();
                 qi.queuePid = pid;
-                qi.queueSize = -1; //m.size();
+                qi.queueSize = m.size();
                 lQueues.add(qi);
             }
         }
