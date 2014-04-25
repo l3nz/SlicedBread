@@ -30,10 +30,19 @@ View the [SlicedBread Documentation Home Page](docs/Home.md)
 Dependencies
 ------------
 
-Requires slf4j.
+Requires slf4j. Should be handled automagically.
+
+Downloads
+---------
+
+ [ ![Download](https://api.bintray.com/packages/lenz/maven/SlicedBread/images/download.png) ](https://bintray.com/lenz/maven/SlicedBread/_latestVersion)
+
 
 License
 -------
 
 Licensed under the LGPL.
+
+
+
 
