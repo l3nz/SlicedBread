@@ -16,7 +16,7 @@ public class MsgErrProcessDied extends MsgError {
 
     @Override
     public String toString() {
-        return super.toString() + " - DiedProcess"  ;
+        return super.toString() + " - DeadProcess"  ;
     }
 
     // METODO factory
