@@ -27,22 +27,37 @@ Happy hacking!
 
 View the [SlicedBread Documentation Home Page](docs/Home.md)
 
+
+Building
+--------
+
+Requires Gradle.
+
+Get a copy of the GitHub repo and type:
+
+   gradle clean build
+
+To have everything built quickly.
+
+
 Dependencies
 ------------
 
-Requires slf4j. Should be handled automagically.
+Requires slf4j. 
+Will be handled automagically by the Gradle build script.
 
 Downloads
 ---------
 
+Get a pre-build jar from Bintray:
+
  [ ![Download](https://api.bintray.com/packages/lenz/maven/SlicedBread/images/download.png) ](https://bintray.com/lenz/maven/SlicedBread/_latestVersion)
+
+When developing, download the -suorces and -javadoc as well so you have everything in your IDE.
 
 
 License
 -------
 
 Licensed under the LGPL.
-
-
-
 
