@@ -1,5 +1,4 @@
 *.bak
 *.class
-build/junit*.xml
-SlicedBread-*.jar
-javaDocs/
+build/
+.gradle/
