@@ -1,8 +1,8 @@
 
 * 0.1.0.1 - April 27, 2014
 
-Added a gradle build script. This lets us push the repo to a public server (eg Bitbucket),
-we can easily crete javadocs and run findbugs on the project. Super!
+Added a Gradle build script. This lets us push the repo to a public server (eg Bitbucket),
+we can easily create Javadocs and run Findbugs on the project. Super!
 
 * 0.1.0 - June 4, 2012
 

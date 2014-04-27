@@ -35,25 +35,26 @@ Requires Gradle.
 
 Get a copy of the GitHub repo and type:
 
-   gradle clean build
+	 git clone https://github.com/l3nz/SlicedBread.git	
+     cd SlicedBread
+     gradle clean build
 
-To have everything built quickly.
+To have everything built from scratch. Dependencies are handled automatically by Gradle.
 
 
-Dependencies
-------------
+### Dependencies ###
 
-Requires slf4j. 
-Will be handled automagically by the Gradle build script.
+At the moment, we only require ''slf4j''. 
+
 
 Downloads
 ---------
 
-Get a pre-build jar from Bintray:
+Get a pre-built JAR from Bintray:
 
  [ ![Download](https://api.bintray.com/packages/lenz/maven/SlicedBread/images/download.png) ](https://bintray.com/lenz/maven/SlicedBread/_latestVersion)
 
-When developing, download the -suorces and -javadoc as well so you have everything in your IDE.
+When developing, we suggest downloading the the ''-sources'' and ''-javadoc'' JARs as well so you have everything in your IDE.
 
 
 License
