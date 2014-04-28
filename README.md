@@ -50,7 +50,20 @@ At the moment, we only require ''slf4j''.
 Downloads
 ---------
 
-Get a pre-built JAR from Bintray:
+In most cases you do not need to do a manual download, just include JCenter as a central Maven repo:
+
+
+	repositories {
+		mavenCentral()
+	    mavenRepo(url: 'http://jcenter.bintray.com') 
+	}
+
+
+	dependencies {
+	    compile 'ch.loway.oss.slicedbread:slicedbread:0.1.0.1'
+	}
+
+As an alternative, you can get a pre-built JAR from Bintray:
 
  [ ![Download](https://api.bintray.com/packages/lenz/maven/SlicedBread/images/download.png) ](https://bintray.com/lenz/maven/SlicedBread/_latestVersion)
 
