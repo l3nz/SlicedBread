@@ -1,4 +1,6 @@
 
+Addes Log2 stats collector.
+
 * 0.1.0.1 - April 27, 2014
 
 Added a Gradle build script. This lets us push the repo to a public server (eg Bitbucket),
