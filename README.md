@@ -28,6 +28,12 @@ Happy hacking!
 View the [SlicedBread Documentation Home Page](docs/Home.md)
 
 
+What's new
+----------
+
+* Version 0.2.0: added latency tracking framework.
+
+
 Building
 --------
 
@@ -60,7 +66,7 @@ In most cases you do not need to do a manual download, just include JCenter as a
 
 
 	dependencies {
-	    compile 'ch.loway.oss.slicedbread:slicedbread:0.1.0.1'
+	    compile 'ch.loway.oss.slicedbread:slicedbread:0.2.0'
 	}
 
 As an alternative, you can get a pre-built JAR from Bintray:
