@@ -1,6 +1,8 @@
 package ch.loway.oss.slicedbread.containers;
 
 import ch.loway.oss.slicedbread.messages.Msg;
+import ch.loway.oss.slicedbread.timer.LogBin;
+import ch.loway.oss.slicedbread.timer.LogTimer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,15 +18,18 @@ import java.util.List;
  */
 public class MsgQueue {
 
-    private final List<Msg> queue = new LinkedList<Msg>();
-
+    private final List<MsgWrapper> queue = new LinkedList<MsgWrapper>();
+    private final LogTimer statsCollector = LogTimer.build(16000);
+    
     /**
      * Queues a message.
      * @param m
      */
     public int push(Msg m) {
+        
+        MsgWrapper wrapped = MsgWrapper.build(m);
         synchronized (queue) {
-            queue.add(m);
+            queue.add(wrapped);
             return queue.size();
         }
     }
@@ -35,29 +40,54 @@ public class MsgQueue {
      * @return
      */
     public Msg pull() {
-        Msg m = null;
+        MsgWrapper m = null;
 
         synchronized (queue) {
             if (queue.size() > 0) {
                 m = queue.remove(0);
             }
         }
-        return m;
+        
+        return unwrap(m);
     }
 
+    
+    private Msg unwrap( MsgWrapper wrapper ) {
+        if ( wrapper == null ) {
+            return null;
+        }
+        
+        long time = System.currentTimeMillis() - wrapper.queuedAt;
+        
+        synchronized ( statsCollector ) {
+            statsCollector.add( (int) time );
+        }
+
+        return wrapper.msg;
+    }
+    
+    
     /**
-     * Gets all messages froma  queue and empties it.
+     * Gets all messages from a queue and empties it.
      * 
      * @return
      */
     public List<Msg> fetchAllMessages() {
 
+        List<MsgWrapper> lOutWrap = Collections.EMPTY_LIST;
         List<Msg> lOut = Collections.EMPTY_LIST;
 
         synchronized (queue) {
             if (!queue.isEmpty()) {
-                lOut = new ArrayList<Msg>(queue);
+                lOutWrap = new ArrayList<MsgWrapper>(queue);
                 queue.clear();
+            }
+        }
+
+        if (lOutWrap.size() > 0) {
+            lOut = new ArrayList<>(lOutWrap.size());
+            for (MsgWrapper wr : lOutWrap) {
+                lOut.add(unwrap(wr));
             }
         }
 
@@ -65,7 +95,7 @@ public class MsgQueue {
     }
 
     /**
-     * Gets the size of the mailbox (for debugging purpuses mostly).
+     * Gets the size of the mailbox (for debugging purpouses mostly).
      * 
      * @return
      */
@@ -77,6 +107,37 @@ public class MsgQueue {
         }
         return n;
     }
+    
+    /**
+     * Returns statistics for this mailbox.
+     * 
+     * @return 
+     */
+    
+    public List<LogBin> getStats() {
+        synchronized ( statsCollector ) {
+            return statsCollector.results();
+        }
+    }
 
+    
+    /**
+     * Wraps a message so we can measure time in queue.
+     * 
+     */
+    
+    private static class MsgWrapper {
+        long queuedAt =0;
+        Msg msg = null;
+        
+        public static MsgWrapper build( Msg msg ) {
+            MsgWrapper m = new MsgWrapper();
+            m.queuedAt = System.currentTimeMillis();
+            m.msg = msg;
+            return m;
+        }
+    } 
+    
+    
 }
 

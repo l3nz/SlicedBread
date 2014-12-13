@@ -34,6 +34,22 @@ public class LogTimer {
     }
     
     /**
+     * A builder to create and initialize the object on one single line.
+     * 
+     * @param maxValue
+     * @return 
+     */
+    
+    
+    public static LogTimer build( int maxValue ) {
+        LogTimer lb = new LogTimer();
+        lb.reset(maxValue);
+        return lb;
+    }
+    
+    
+    
+    /**
      * Adds (counts) an item. 
      * 
      * @param v 

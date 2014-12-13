@@ -85,6 +85,8 @@ public class SoManyRequests {
         long t1 = System.currentTimeMillis() - t0;
         emptyReceivedQueue(console, myself, 500);
 
+        System.out.println( console.list() );
+       
         for (int i = 0; i < THREADS; i++) {
             console.send(MsgActionIds.build(myself, thr[i], ACTION_PRINT_MSG, 0, ""));
             console.send(MsgPleaseStop.build(myself, thr[i]));
@@ -100,6 +102,9 @@ public class SoManyRequests {
                 + " Millis:" + t1
                 + " Req/sec:" + (((totalReqsSent + totalReqsRcvd) * 1000) / t1));
 
+        
+        System.out.println( console.list() );
+        
         assertTrue(true);
 
     }

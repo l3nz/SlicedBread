@@ -243,12 +243,13 @@ public class MessagingConsole {
 
         for ( PID pid: mQueues.keySet() ) {
 
-            MsgQueue m = getQueue(pid);
+            MsgQueue mq = getQueue(pid);
 
-            if ( m != null) {
+            if ( mq != null) {
                 QueueInfo qi = new QueueInfo();
                 qi.queuePid = pid;
-                qi.queueSize = m.size();
+                qi.queueSize = mq.size();
+                qi.queueStats = mq.getStats();
                 lQueues.add(qi);
             }
         }
