@@ -65,7 +65,7 @@ public class MessagingConsoleTest {
         }
 
         long dur = System.currentTimeMillis() -t0;
-        long expected = iters * step;
+        long expected = iters * (long) step;
 
         System.out.println( "Sleep Duration: " + step +"ms "
                 + "-  Expected: " + expected + "ms "
