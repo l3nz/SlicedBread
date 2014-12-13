@@ -1,9 +1,9 @@
 
 
-0.1.1 - ....
+0.2.0 - Dec 13, 2014 
 =====================
 
-- tbd
+- Performance tracking framework (bug #4)
 
 
 0.0.1 - Nov 1st, 2011

@@ -116,6 +116,27 @@ Every mailbox has a name. All worker threads have a mailbox that shares their st
 to have more, e.g. multiple threads "Printer/01" and "Printer/02" might share a mailbox "Printer" where 
 jobs are actually queued. 
 
+Listing threads
+===============
+
+You can easily get a list of active mailboxes by calling the .list() method. This returns the current
+mailboxes, the number of messages queued on them and latency statistics.
+
+Latency statistics looks like:
+
+        Mailbox: T10#12 
+        Current Size: 0
+        Bin     0ms  1%     1106|              
+        Bin     1ms  5%     4722|              
+        Bin     2ms 16%    12859|##            
+        Bin     4ms 34%    27904|####          
+        Bin     8ms 41%    33122|#####   
+
+Latency measurements are splitted into "bins" of logarithmic size. Latency is measured between the moment
+a message is passed to the console to be queued and when it is pulled back from the console and returned.
+Latency is measured in milliseconds.
+
+
 Sending and receiving messages
 ==============================
 
