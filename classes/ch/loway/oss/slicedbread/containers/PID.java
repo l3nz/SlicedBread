@@ -71,7 +71,7 @@ public class PID {
     /**
      * Ottiene un nuovo PID unico.
      * 
-     * @return
+     * @return the new PID.
      */
 
     public static synchronized PID getNextPid( String description) {
@@ -88,7 +88,7 @@ public class PID {
     /**
      * \todo vedi Effective Java
      * @param obj
-     * @return
+     * @return equality
      */
 
     @Override
@@ -107,18 +107,13 @@ public class PID {
      * Per l'hashCode, uso il PID corrente
      * \todo vedi Effective Java
      *
-     * @return
+     * @return hashcode
      */
 
     @Override
     public int hashCode() {
         return pid;
     }
-
-
-
-
-
 
     // \todo Metodo Compare e Hash - vedi Effective Java
     // \todo rendere final la classe?

@@ -123,7 +123,7 @@ public class MessagingConsole {
      * Returns all messages.
      *
      * @param myPID
-     * @return
+     * @return a list of all messages on the mailbox.
      */
 
     public List<Msg> receiveAll( PID myPID ) {
@@ -138,7 +138,7 @@ public class MessagingConsole {
      * Il PID e' sempre diverso.
      * 
      * @param description
-     * @return
+     * @return a a new, unique PID.
      */
 
     public PID registerExistingThread( String description ) {
@@ -152,7 +152,7 @@ public class MessagingConsole {
      * Given an unique name, creates a new mailbox.
      * 
      * @param uniqueName
-     * @return
+     * @return a new PID, unles there is already one under that name.
      */
     public PID registerExistingThreadByName( String uniqueName ) {
         final PID px = whois( uniqueName );
@@ -170,7 +170,7 @@ public class MessagingConsole {
      * @param callerPid
      * @param description
      * @param process
-     * @return
+     * @return the PID for the new thread.
      */
 
     public PID register( final PID callerPid, String description, final TaskProcess process ) {
@@ -223,9 +223,10 @@ public class MessagingConsole {
     /**
      * Looks up for a PID given its description.
      * If not found, returns null.
+     * This is jus an alias for findByDescription.
      * 
      * @param description
-     * @return
+     * @return the PID found, or null.
      */
 
     public PID whois( String description ) {
@@ -235,7 +236,7 @@ public class MessagingConsole {
     /**
      * Get a list of objects that describe the current open mailboxes.
      *
-     * @return The list of MailBoxes
+     * @return The list of MailBoxes info objects
      */
 
     public List<QueueInfo> list() {
@@ -265,7 +266,7 @@ public class MessagingConsole {
      * If a queue for the same PID alredy exists, the old queue
      * is discarded.
      *
-     * This methid requires no synchronization as the map is synchonized.
+     * This method requires no synchronization as the map is synchonized.
      *
      * @param pid
      */
@@ -282,7 +283,7 @@ public class MessagingConsole {
      * Gets you a  the list of messages from a queue.
      * 
      * @param pid
-     * @return
+     * @return the inner MsgQueue object.
      */
 
     private MsgQueue getQueue( PID pid ) {
@@ -307,6 +308,14 @@ public class MessagingConsole {
         }
     }
 
+    /**
+     * Loads a PID by description.
+     * 
+     * @param description
+     * @return the PID (if found) or null.
+     */
+    
+    
     public PID findByDescription( String description ) {
         
         PID res = null;

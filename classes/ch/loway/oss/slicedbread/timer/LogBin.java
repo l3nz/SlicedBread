@@ -49,7 +49,7 @@ public class LogBin {
      * Pretty-prints a list of LogBin stats.
      * 
      * @param l
-     * @return 
+     * @return a pretty print with histograms and elephants.
      */
     
     public static String printAsText(List<LogBin> l) {

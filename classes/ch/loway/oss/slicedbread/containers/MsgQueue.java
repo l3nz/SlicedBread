@@ -37,7 +37,7 @@ public class MsgQueue {
     /**
      * Pulls the oldest message from a queue.
      *
-     * @return
+     * @return the mesage, or null.
      */
     public Msg pull() {
         MsgWrapper m = null;
@@ -51,6 +51,12 @@ public class MsgQueue {
         return unwrap(m);
     }
 
+    /**
+     * Unwraps a message from the wrapper. 
+     * 
+     * @param wrapper The wrapped message.
+     * @return the wrapped message.
+     */
     
     private Msg unwrap( MsgWrapper wrapper ) {
         if ( wrapper == null ) {
@@ -70,7 +76,7 @@ public class MsgQueue {
     /**
      * Gets all messages from a queue and empties it.
      * 
-     * @return
+     * @return a List of all messages, or an empty list.
      */
     public List<Msg> fetchAllMessages() {
 
@@ -96,8 +102,9 @@ public class MsgQueue {
 
     /**
      * Gets the size of the mailbox (for debugging purpouses mostly).
+     * Do not overuse - this is a linked list, so this is pretty expensive.
      * 
-     * @return
+     * @return the size.
      */
 
     public int size() {
@@ -111,7 +118,7 @@ public class MsgQueue {
     /**
      * Returns statistics for this mailbox.
      * 
-     * @return 
+     * @return statistics for the undelying collector.
      */
     
     public List<LogBin> getStats() {

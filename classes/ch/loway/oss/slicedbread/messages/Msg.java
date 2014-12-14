@@ -24,7 +24,7 @@ public class Msg {
 
 
     /**
-     * @return the fromPid
+     * @return the sender Pid
      */
     public PID getFromPid() {
         return fromPid;
@@ -84,8 +84,9 @@ public class Msg {
     // metodi comuni
 
     /**
-     *
-     * @return
+     * Use only for debug - the builder is pretty unefficient.
+     * 
+     * @return a serialized view.
      */
 
     @Override

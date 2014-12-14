@@ -37,7 +37,7 @@ public class LogTimer {
      * A builder to create and initialize the object on one single line.
      * 
      * @param maxValue
-     * @return 
+     * @return the new object.
      */
     
     
@@ -69,7 +69,7 @@ public class LogTimer {
      * Computes a slow log2.
      * 
      * @param v
-     * @return 
+     * @return the int  log2. Used only for testing.
      */
     
     private int slow_log2( int v ) {
@@ -78,14 +78,19 @@ public class LogTimer {
         return (int) l;
     }
     
+
+    int nonstack_v = 0; // not stack-llocated
+    
     /**
      * The shift-based logarithm.
      * 
      * For some reason, i+1 is way quicker than i++.
      * Using an object variable is quicker.
+     * 
+     * @param vv a number (positive)
+     * @return the integer log2.  
      */
     
-    int nonstack_v = 0;
     private int quick_log2( int vv ) {
         
         if (vv == 0) {
@@ -122,7 +127,7 @@ public class LogTimer {
     /**
      * Creates a list with all results.
      * 
-     * @return 
+     * @return a list with results, in order.
      */
    
     public List<LogBin> results() {
@@ -147,7 +152,7 @@ public class LogTimer {
      * The minimum value for bin 'n'.
      * 
      * @param n
-     * @return 
+     * @return the minimum value for attribuiting a number to this bin.
      */
     
     public int minForBin( int n ) {
@@ -164,7 +169,7 @@ public class LogTimer {
      * What is the maximum value for bin 'n'?
      * 
      * @param n
-     * @return 
+     * @return the maximum value for attribuiting a number to this bin.
      */
     
     public int maxForBin( int n ) {
