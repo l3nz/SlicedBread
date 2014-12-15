@@ -122,7 +122,7 @@ Listing threads
 You can easily get a list of active mailboxes by calling the .list() method. This returns the current
 mailboxes, the number of messages queued on them and latency statistics.
 
-Latency statistics looks like:
+Latency statistics look like:
 
         Mailbox: T10#12 
         Current Size: 0
@@ -180,7 +180,7 @@ So the cross-thread visibility is basically free at the application level.
 
 This does not prevent you to keep stray pointers and modifying (supposedly) immutable 
 object at run time when held by other threads. You have all the rope you need to hang 
-yourself with, so respect the [Golden Rules](Golden-rules.md) or you'll regret it.
+yourself with, so respect the [Golden Rules](Golden-Rules.md) or you'll regret it.
 
 
 ''''
