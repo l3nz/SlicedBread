@@ -22,8 +22,8 @@ and I'm sharing it.
 SlicedBread is licensed under the LGPL.
 
 The documentation for the project is within the ''docs'' folder.
-I created a small, no-pretence space for discussion and ideas on Google Plus - find it  
-at [SlicedBread community](https://plus.google.com/u/0/communities/115965331294802598233) .
+I created a small, no-pretence space for discussion and ideas on Google Plus - 
+find it at [SlicedBread community](https://plus.google.com/u/0/communities/115965331294802598233) .
 
 Happy hacking!
 
@@ -81,5 +81,5 @@ When developing, we suggest downloading the the ''-sources'' and ''-javadoc'' JA
 License
 -------
 
-Licensed under the LGPL.
+Licensed under the LGPL (v3).
 
