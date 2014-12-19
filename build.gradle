@@ -9,13 +9,16 @@ def env = System.getenv()
 
 project.ext {
   webapp_name    = 'slicedbread'
-  app_version    = '0.2.0'
+  app_version    = '0.2.1'
   build_number   = env["BUILD_NUMBER"]  
   version_class  = 'ch/loway/oss/slicedbread/CS.java'
   build_time     = "" + new Date()
 }
 
-
+tasks.withType(JavaCompile) {
+    sourceCompatibility = '1.5'
+    targetCompatibility = '1.5'
+}
 
 sourceSets {
 		

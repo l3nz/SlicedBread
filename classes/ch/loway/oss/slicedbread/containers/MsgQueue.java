@@ -91,7 +91,7 @@ public class MsgQueue {
         }
 
         if (lOutWrap.size() > 0) {
-            lOut = new ArrayList<>(lOutWrap.size());
+            lOut = new ArrayList<Msg>(lOutWrap.size());
             for (MsgWrapper wr : lOutWrap) {
                 lOut.add(unwrap(wr));
             }
