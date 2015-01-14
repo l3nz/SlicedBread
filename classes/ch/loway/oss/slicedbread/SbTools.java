@@ -73,6 +73,44 @@ public class SbTools {
         }
     }
 
+    /**
+     * A simple way to block until a condition is met.
+     */
+    
+    public static abstract class BlockUntil {
+
+        /**
+         * Waits until the specified condition is met.
+         * 
+         * @param maxWait in ms
+         * @return true: ok - false: timeout
+         */
+        public boolean sync(long maxWait) {
+            long beginning = System.currentTimeMillis();
+            long took = 0;
+            do {
+
+                if (stopIfTrue()) {
+                    return true;
+                }
+
+                SbTools.sleep(100);
+                took = System.currentTimeMillis() - beginning;
+
+            } while (took < maxWait);
+            return false;
+        }
+
+        
+        /**
+         * Stop procesing if this function returns true.
+         * 
+         * @return true to stop (condition met); else false. 
+         */
+        public abstract boolean stopIfTrue();
+    }
+
+    
 
 }
 

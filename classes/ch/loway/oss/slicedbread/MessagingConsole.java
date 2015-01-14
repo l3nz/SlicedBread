@@ -310,6 +310,7 @@ public class MessagingConsole {
 
     /**
      * Loads a PID by description.
+     * If no PID found, returns null.
      * 
      * @param description
      * @return the PID (if found) or null.
@@ -363,14 +364,72 @@ public class MessagingConsole {
                 q2.push(error);
 
             } else {
-                logger.error("Cannot return message to non-existent mailbox {}", sourcePid);
+                logger.error("Cannot return message {} to non-existent mailbox {}", message, sourcePid);
             }
         } else {
-            logger.error("Cannot return message with empty PID {}", message);
+            logger.debug("Cannot return message with empty PID {}", message);
         }
 
     }
 
+    /**
+     * A blocking version of findByDescription.
+     * 
+     * @param description to be found
+     * @param maxTimeout in milliseconds
+     * @return the PID; or null if not found and timeout expired.
+     */
+    
+    public PID blockingFindByDescription( final String description, long maxTimeout ) {
+        
+        boolean ok = new SbTools.BlockUntil() {
+
+            @Override
+            public boolean stopIfTrue() {
+                PID lastPid = findByDescription(description);
+                return (lastPid != null);
+            }
+        }.sync(maxTimeout);
+        
+        if ( ok ) {
+            return findByDescription(description);
+        } else {
+            return null;
+        }
+        
+    } 
+    
+    /**
+     * Blocks until a mailbox is deleted.
+     * 
+     * @param description
+     * @param maxTimeout
+     * @return null if all went well, or the PID if a mailbox is still there 
+     *         after timeout expired.
+     */
+    
+    public PID blockUntilPidDisappears( final String description, long maxTimeout ) {
+        
+        boolean ok = new SbTools.BlockUntil() {
+
+            @Override
+            public boolean stopIfTrue() {
+                PID lastPid = findByDescription(description);
+                return (lastPid == null);
+            }
+        }.sync(maxTimeout);
+        
+        if ( ok ) {
+            return null;
+        } else {
+            return findByDescription(description);
+        }
+        
+    }
+    
+    
+    
+    
 }
 
 // 
