@@ -1,5 +1,6 @@
 package ch.loway.oss.slicedbread.timer;
 
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,4 +46,25 @@ public class LogBinTest {
         assertEquals( "min", 233, b.getHits() );
     }
     
+    
+    @Test
+    public void printAsText() {
+        
+        LogTimer lt = new LogTimer();
+        lt.reset(7);
+        
+        lt.add(5);
+        lt.add(5);
+        lt.add(0);
+        lt.add(2);
+        lt.add(0);
+        lt.add(3);
+        
+        List<LogBin> lR = lt.results();
+        
+        System.out.println( lR );
+        
+        System.out.println( LogBin.printAsText(lR ));
+        
+    }
 }

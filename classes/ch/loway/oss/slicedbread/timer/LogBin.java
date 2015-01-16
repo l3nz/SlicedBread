@@ -32,6 +32,23 @@ public class LogBin {
         return maxValue;
     }
     
+    /**
+     * The middle point for an interval.
+     * If the interval is open-ended, its 2*min.
+     * 
+     * @return the value.
+     */
+    
+    public int getIntervalCenter() {
+        
+        if ( getIntervalMax() == Integer.MAX_VALUE ) {
+            return getIntervalMin() * 2;
+        } else {
+            return (getIntervalMin() + getIntervalMax() )/2;
+        }
+    }
+    
+    
     public int getHits() {
         return nValues;
     }
@@ -60,32 +77,54 @@ public class LogBin {
 
         int maxBin = 0;
         int totReq = 0;
+        int sum = 0;
         for (int i = 0; i < l.size(); i++) {
             LogBin b = l.get(i);
             if (b.getHits() > 0) {
                 maxBin = i;
                 totReq += b.getHits();
+                sum = b.getIntervalCenter() * b.getHits();
             }
 
         }
 
         StrFmt f = new StrFmt();
 
-        for (int i = 0; i < maxBin; i++) {
+        for (int i = 0; i <= maxBin; i++) {
             LogBin b = l.get(i);
-            f.add("Bin ")
+            f.add(" Bin ")
                     .addR(b.getIntervalMin(), 5)
                     .add(b.isOpenEnded() ? "+ " : "ms")
                     .addPerc(b.getHits(), totReq)
                     .addR(b.getHits(), 8)
                     .addHistogram(b.getHits(), totReq, 15)
                     .add("\n");
-
         }
 
+        f.add( " Avg:")
+         .addR( div( sum, totReq), 5 )
+         .add( "ms")
+         .addL( " Tot:", 5 )
+         .addR( totReq, 8 )
+         .addL("", 15)
+         .add( "\n");
+        
         return f.toString();
     }
     
-    
+    /***
+     * Integer division.
+     * 
+     * @param a
+     * @param b
+     * @return 
+     */
+    public static int div( int a, int b ) {
+        if ( b ==  0) {
+            return 0;
+        } else {
+            return (a/b);
+        }
+    }
     
 }

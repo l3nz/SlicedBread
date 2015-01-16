@@ -154,7 +154,10 @@ public class LogTimerTest {
         assertEquals( "b1  1-1" ,  0, r.get(1).getHits() );
         assertEquals( "b2  2-3" ,  2, r.get(2).getHits() );
         assertEquals( "b2  4-7" ,  2, r.get(3).getHits() );
-        assertEquals( "b3  8+" ,   0, r.get(4).getHits() );        
+        assertEquals( "b3  8+" ,   0, r.get(4).getHits() );      
+        
+        
+        
     }
     
     /**
