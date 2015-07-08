@@ -219,6 +219,40 @@ public class MessagingConsole {
         return processPid;
 
     }
+    
+    /**
+     * Registers a thread only if it is not already present.
+     * If it is present, returns the current PID.
+     * If not, registers it and returns the new PID.
+     * 
+     * @param callerPid The parent's PID. Can be null.
+     * @param description A description of this thread.
+     * @param process The TaskProcess object that will be run.
+     * @return a PID for the running thread.
+     */
+    
+    
+    public PID registerIfNotRunning( final PID callerPid, String description, final TaskProcess process ){
+        
+        // First I try without locking - in most cases it's either there or not.
+        PID pid = findByDescription(description);
+        if ( pid != null ) {
+            return pid;
+        }
+        
+        synchronized (this) {
+            // If it is not there, I try again locking to mke sure that this canot be run 
+            // in parallel.
+            pid = findByDescription(description);
+            if ( pid != null ) {
+                return pid;
+            }
+            
+            return register(callerPid, description, process);
+        }
+        
+    }
+    
 
     /**
      * Looks up for a PID given its description.
