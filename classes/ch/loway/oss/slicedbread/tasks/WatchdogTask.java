@@ -59,12 +59,13 @@ public class WatchdogTask extends TaskProcess {
                     updateThreadPool( (MsgThreadPool) m );
                 }
                 
-                // Process il thread pool
+                // Processes our thread pool
                 processThreadPoolMailboxes();
                 
                 
             }
         } catch ( InterruptedException e ) {
+            logger.error( "Watchdog interrupted: ", e);
             return;
         }
 
@@ -175,9 +176,6 @@ public class WatchdogTask extends TaskProcess {
         logger.error( "All thread pools cleaned in " + took + " ms - OK: " + ok );
         
     }
-    
-    
-    
     
 }
 

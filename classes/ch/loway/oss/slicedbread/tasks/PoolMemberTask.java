@@ -1,6 +1,5 @@
 package ch.loway.oss.slicedbread.tasks;
 
-import ch.loway.oss.sbDemos.helloWorld.MsgPrint;
 import ch.loway.oss.slicedbread.MessagingConsole;
 import ch.loway.oss.slicedbread.TaskProcess;
 import ch.loway.oss.slicedbread.containers.PID;
