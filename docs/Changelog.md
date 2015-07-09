@@ -1,4 +1,9 @@
 
+0.4.0 - July 9, 2015
+====================
+
+- Thread pools and repeated events
+- RTasks
 
 0.2.0 - Dec 13, 2014 
 =====================

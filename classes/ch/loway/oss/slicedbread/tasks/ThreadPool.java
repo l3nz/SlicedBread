@@ -18,16 +18,18 @@ import org.slf4j.LoggerFactory;
  * This class manages a thread pool.
  * 
  * A thread pool has the following mailboxes:
- *  - Pool/name - the mailbox used to enqueue mesages
- *  - Pool/name/CTRL  - the control mailbox, used by the threads to notify the 
- *    pool manager and by SB to send mabk events (errors, closed thrtreads, etc)
- * - Pool/name/1...  - each thread's private mailbox
+ *  - "name" - the mailbox used to enqueue mesages
+ *  - "Pool/name/CTRL"  - the control mailbox, used by the threads to notify the 
+ *    pool manager and by SB to send back events (errors, closed threads, etc)
+ *  - "Pool/name/1..."  - each thread's private mailbox
  * 
  * This class is not run as a thread itself, but will be multiplexed on the
- * watchdong thread by calling its non-blocking processMessages() that allows it 
+ * watchdog thread by calling its non-blocking processMessages() that allows it 
  * to proces the /CTRL mailbox. 
  * This lets it react to events (eg closed threads) and manage pool size. 
  * 
+ * Actions are performed by specific threads, who read commands from the
+ * pool's public mailbox and process them. See PoolMemberTask.
  * 
  * @author lenz
  * @since 0.3
@@ -35,8 +37,8 @@ import org.slf4j.LoggerFactory;
 public class ThreadPool {
 
     private final static Logger logger = LoggerFactory.getLogger(ThreadPool.class);
-    private final static String POOL_PREFIX = "SbPool/";
-    private final static String POOL_CTRL_SUFFIX = "/CTRL";
+    public final static String POOL_PREFIX = "Pool/";
+    public final static String POOL_CTRL_SUFFIX = "/CTRL";
     
     
     MessagingConsole console = MessagingConsole.getConsole();
@@ -55,8 +57,7 @@ public class ThreadPool {
         this.maxChannels = max;
         
         this.poolPID = PID.getNextPid( getPoolName(name) );
-        console.addQueue(poolPID);
-
+        
         this.fromPID = PID.getNextPid( getPoolCtrlName(name) );
         console.addQueue(fromPID);
 
@@ -65,6 +66,8 @@ public class ThreadPool {
             threads.put( newThread, ThreadState.STARTING );
         }
         
+        console.addQueue(poolPID);
+
     }
 
     public void processMessages() {
@@ -82,24 +85,24 @@ public class ThreadPool {
                 updateThreadState( m.getFromPid(), ThreadState.RUNNING );
             } else
             if ( m instanceof MsgProcessEnded ) {
+                // Segnalo se non e' in stato stopping ma in ogni
+                // caso elimino il thread.
                 
-                if ( threadState( m.getFromPid()) == ThreadState.STOPPING ) {           
-                    threads.remove( m.getFromPid() );
-                    
-                    if ( threads.isEmpty() ) {
+                if ( threadState( m.getFromPid()) == ThreadState.STOPPING ) {  
+                    logger.error("Received MsgPleaseStop " + m + " with state " + threads );
+                }
+                
+                threads.remove( m.getFromPid() );
 
-                        console.removeQueue(fromPID);
-                        console.removeQueue(poolPID);
-                        fromPID = null;
-                        poolPID = null;
-        
-                        logger.warn("Thread pool " + name + " removed");
-        
-                    }
-                    
-                    
-                } else {
-                    logger.error("Unknown stopped ThreadState");
+                if ( threads.isEmpty() ) {
+
+                    console.removeQueue(fromPID);
+                    console.removeQueue(poolPID);
+                    fromPID = null;
+                    poolPID = null;
+
+                    logger.warn("Thread pool " + name + " removed");
+
                 }
                 
             } else {
@@ -151,13 +154,13 @@ public class ThreadPool {
     
     private String getNewThreadName() {
         currThreadNo += 1;
-        String n = getPoolName(name) + "/" + currThreadNo;
+        String n = POOL_PREFIX + getPoolName(name) + "/" + currThreadNo;
         return n;
     }
     
     /**
      * Updated the thread state.
-     * If the thread is unknowns it is ignoored.
+     * If the thread is unknowns it is ignored.
      * 
      * @param pid our thread
      * @param newState 
@@ -166,6 +169,7 @@ public class ThreadPool {
     private void updateThreadState( PID pid, ThreadState newState ) {
         if (threads.containsKey(pid) ) {
             threads.put(pid, newState);
+            logger.error(" - PID " + pid + " -> " + newState);
         }
     }
     
@@ -192,7 +196,7 @@ public class ThreadPool {
      */
     
     public static String getPoolName( String name ) {
-        return POOL_PREFIX + name; 
+        return name; 
     }
     
     /**

@@ -5,7 +5,7 @@ import ch.loway.oss.slicedbread.containers.PID;
 import ch.loway.oss.slicedbread.messages.Msg;
 
 /**
- * This is a pool-runnable task.
+ * This is a pool-runnable getRTask.
  * 
  * \todo use a better interface so the RTask can know it 
  *       all about its environment.
@@ -47,16 +47,30 @@ public class MsgPoolRunnable extends Msg {
     } 
     
     /**
-     * Obtains the task.
-     * \todo 
+     * Builds a runnable getRTask out of an expired deferred getRTask.
      * 
-     * @return the current task. 
+     * @param m
+     * @return 
      */
     
-    public RTask task() {
+    public static MsgPoolRunnable build( MsgPoolDeferred m ) {
+        return build(m.getFromPid(), m.getPool(), m.getRTask() );
+    }
+    
+    /**
+     * Obtains the RTask.
+     * \todo 
+     * 
+     * @return the current getRTask. 
+     */
+    
+    public RTask getRTask() {
         return task;
     }
     
+    public void setRTask( RTask t) {
+        task = t;
+    }
     
 }
 

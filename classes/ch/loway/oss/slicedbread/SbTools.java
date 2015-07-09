@@ -1,8 +1,13 @@
 
 package ch.loway.oss.slicedbread;
 
+import ch.loway.oss.slicedbread.containers.PID;
+import ch.loway.oss.slicedbread.messages.Msg;
+import ch.loway.oss.slicedbread.messages.common.MsgPleaseStop;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Some static tools.
@@ -13,6 +18,8 @@ import java.io.StringWriter;
  */
 public class SbTools {
 
+    private static final Logger logger = LoggerFactory.getLogger(SbTools.class);
+    
     /**
      * Turns an exception - actually a Throwable - into a String.
      * It stores the complete stack trace and inner exceptions as well.
@@ -110,6 +117,83 @@ public class SbTools {
         public abstract boolean stopIfTrue();
     }
 
+    /**
+     * Waits for a mailbox to be existent or non-existent.
+     * 
+     * @param mailbox the name
+     * @param maxTimeout max timeout
+     * @param isUp true: up, false: downs
+     * @return 
+     */
+    
+    
+    private static boolean awaitMailbox( final String mailbox, int maxTimeout, final boolean isUp ) {
+        
+        boolean result = new BlockUntil() {
+
+            MessagingConsole mc = MessagingConsole.getConsole();
+            
+            @Override
+            public boolean stopIfTrue() {
+                return (( mc.findByDescription( mailbox ) != null) == isUp);
+            }
+            
+        }.sync(maxTimeout);
+        
+        if ( !result  ) {
+            logger.error( "Timed out waiting for mailbox '" + mailbox + "' "
+                        + "to go" + (isUp ? "up": "down"));
+        }
+        
+        return result;
+    }
+        
+        
+    public static boolean awaitMailboxUp( String mailbox, int maxTimeout ) {
+        return awaitMailbox( mailbox, maxTimeout, true);
+    }
+    
+    
+    public static boolean awaitMailboxDown( String mailbox, int maxTimeout ) {
+        return awaitMailbox( mailbox, maxTimeout, false);
+    }
+    
+    /**
+     * Shuts down a PID and waits for confirmation.
+     * Uses a temporary mailbox that is deleted after some answer is received.
+     * 
+     * @param to the PID to shut down.
+     * @return 
+     */
+    
+    public static Msg shutdown( PID to ) {
+        
+        PID temp = null; 
+        Msg msg = null;
+        MessagingConsole mc = MessagingConsole.getConsole();
+            
+        try {
+            
+            temp = mc.registerExistingThread( "Shutdown/" + Math.random() );
+            mc.send( MsgPleaseStop.build(temp, to));
+            // waits for the answer.
+            msg = mc.receive(temp, 5000);
+        
+            if ( msg == null ) {
+                logger.error( "Thread " + to + " did not terminate within the timeout.");
+            }
+            
+        } catch ( Throwable t ) {
+            logger.error("While shutting down " + to, t);
+            
+        } finally {
+            if ( temp != null ) {
+                mc.removeQueue(temp);
+            }
+        }
+        
+        return msg;
+    }
     
 
 }

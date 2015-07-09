@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This task is a pool thread.
+ * This getRTask is a pool thread.
+ * It reads data from the pool's public mailbox and also queries its own
+ * private mailbox as to notify the pool.
  * 
  * @author lenz
  * @since 0.3
@@ -44,11 +46,12 @@ public class PoolMemberTask extends TaskProcess {
                 
                 // Are clients telling us anything?
                 Msg m = console.receive(poolPID, 100);
+                //logger.error("From pool: " + m);
                 if ( m instanceof MsgPoolRunnable ) {
                     try {
                         processRunnable( (MsgPoolRunnable) m );
                     } catch ( Throwable t ) {
-                        logger.error( "When procesing " + m, t);
+                        logger.error( "When processing " + m, t);
                     }
                 } else {
                     if ( m != null ) {
@@ -65,7 +68,7 @@ public class PoolMemberTask extends TaskProcess {
     };
 
     /**
-     * Processes a runnable task.
+     * Processes a runnable getRTask.
      * If there is a return message, it enqueues it.
      * 
      * @param r 
@@ -73,7 +76,7 @@ public class PoolMemberTask extends TaskProcess {
     
     private void processRunnable( MsgPoolRunnable r ) {
         
-        Msg m = r.task().process();
+        Msg m = r.getRTask().process();
         if ( m != null ) {
             console.send(m);
         }
@@ -82,10 +85,10 @@ public class PoolMemberTask extends TaskProcess {
     
    
     /**
-     * Creates a task for a given pool.
+     * Creates a getRTask for a given pool.
      * 
      * @param poolPID the Pool's own PID
-     * @return A brand-new task.
+     * @return A brand-new getRTask.
      */
     
     public static PoolMemberTask build( PID poolPID ) {

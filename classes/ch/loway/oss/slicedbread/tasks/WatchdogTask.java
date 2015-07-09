@@ -1,14 +1,18 @@
 package ch.loway.oss.slicedbread.tasks;
 
-import ch.loway.oss.sbDemos.helloWorld.MsgPrint;
 import ch.loway.oss.slicedbread.MessagingConsole;
 import ch.loway.oss.slicedbread.SbTools;
 import ch.loway.oss.slicedbread.TaskProcess;
 import ch.loway.oss.slicedbread.containers.PID;
 import ch.loway.oss.slicedbread.messages.Msg;
 import ch.loway.oss.slicedbread.messages.common.MsgPleaseStop;
+import ch.loway.oss.slicedbread.messages.common.MsgProcessEnded;
+import ch.loway.oss.slicedbread.messages.wd.MsgPoolRunnable;
+import ch.loway.oss.slicedbread.messages.wd.MsgPoolDeferred;
 import ch.loway.oss.slicedbread.messages.wd.MsgThreadPool;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +35,7 @@ public class WatchdogTask extends TaskProcess {
     private final Logger logger = LoggerFactory.getLogger(WatchdogTask.class);
     PID watchdogPid = null;
     Map<String,ThreadPool> pools = new HashMap<String, ThreadPool>();
+    List<MsgPoolDeferred> deferredTasks = new ArrayList();
     
     /**
      * This is our main loop.
@@ -53,14 +58,20 @@ public class WatchdogTask extends TaskProcess {
                 if ( m instanceof MsgPleaseStop ) {
                     logger.error("Watchdog gracefully stopping");
                     cleanup();
+                    getConsole().send(MsgProcessEnded.build(watchdogPid, m.getFromPid()));
                     return;
                 } else
+                if ( m instanceof MsgPoolDeferred ) {
+                    addToRunnablePool((MsgPoolDeferred) m);
+                } else 
                 if ( m instanceof MsgThreadPool ) {
                     updateThreadPool( (MsgThreadPool) m );
                 }
                 
                 // Processes our thread pool
                 processThreadPoolMailboxes();
+                runDeferred();
+               
                 
                 
             }
@@ -176,6 +187,56 @@ public class WatchdogTask extends TaskProcess {
         logger.error( "All thread pools cleaned in " + took + " ms - OK: " + ok );
         
     }
+    
+    /**
+     * This is a static method that start the watchdog.
+     * 
+     * @return 
+     */
+    
+    public static PID up() {
+        MessagingConsole mc = MessagingConsole.getConsole();
+        WatchdogTask wd = new WatchdogTask();
+        PID watchdog = mc.registerIfNotRunning(null, WatchdogTask.WATCHDOG, wd);
+        return watchdog;
+        
+    }
+    
+    /**
+     * Shuts down the watchdog.
+     * 
+     */
+    
+    public static void down() {
+        MessagingConsole mc = MessagingConsole.getConsole();
+        PID watchdog = mc.findByDescription(WatchdogTask.WATCHDOG);
+        SbTools.shutdown(watchdog);
+    }
+    
+    /**
+     * 
+     */
+    public void addToRunnablePool( MsgPoolDeferred m ) {
+        deferredTasks.add(m);
+    }
+    
+    public void runDeferred() {
+        long now = System.currentTimeMillis();
+        List<MsgPoolDeferred> lDeletions = new ArrayList();
+        
+        for ( MsgPoolDeferred m: deferredTasks ) {
+            if ( m.getScheduleAfter() < now ) {
+                lDeletions.add(m);
+            }
+        }
+        
+        deferredTasks.removeAll(lDeletions);
+        for ( MsgPoolDeferred r: lDeletions ) {
+            getConsole().send( MsgPoolRunnable.build(r));
+        }
+        
+    }
+    
     
 }
 

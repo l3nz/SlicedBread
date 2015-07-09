@@ -46,7 +46,11 @@ public abstract class TaskProcess {
     }
 
     public String getParentDescription() {
-        return parentPid.getDescr();
+        if ( parentPid != null ) {
+            return parentPid.getDescr();
+        } else {
+            return "/null/";
+        }
     }
 
     public abstract void run();    

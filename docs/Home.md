@@ -6,12 +6,12 @@ Getting started
 - Fork/download the library from GitHub from https://github.com/l3nz/SlicedBread
 - Follow the [Golden Rules](Golden-Rules.md) when coding
 
-
 Reference / Tutorials
 =====================
 
 - The [SlicedBread objects](SlicedBread-objects.md) - who is who
 - Read [Working with the Console](Working-with-the-Console.md)
+- Understan [Thread Pools](ThreadPools.md)
 - Have a look at the minimal [Sample application](Sample-application.md)
 - Learn more on [Logging](Logging.md)
 
