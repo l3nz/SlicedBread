@@ -22,12 +22,13 @@ and I'm sharing it.
 SlicedBread is licensed under the LGPL.
 
 The documentation for the project is within the ''docs'' folder.
-I created a small, no-pretence space for discussion and ideas on Google Plus - 
-find it at [SlicedBread community](https://plus.google.com/u/0/communities/115965331294802598233) .
 
 Happy hacking!
 
 View the [SlicedBread Documentation Home Page](docs/Home.md)
+
+
+
 
 
 What's new
@@ -60,24 +61,8 @@ At the moment, we only require ''slf4j''.
 Downloads
 ---------
 
-In most cases you do not need to do a manual download, just include JCenter as a central Maven repo:
+This library used to be on JCenter. Frankly, I cannot be bothered to jump through all the hoops to publish on Maven Central - I do this in my spare time, give me a break. So you can build it on your own and publish on your private repo - I enclose a recipe for PomFrites https://github.com/l3nz/ObjectiveSync.git to make it easier. Enjoy.
 
-
-	repositories {
-		mavenCentral()
-	    mavenRepo(url: 'http://jcenter.bintray.com') 
-	}
-
-
-	dependencies {
-	    compile 'ch.loway.oss.slicedbread:slicedbread:0.4.0'
-	}
-
-As an alternative, you can get a pre-built JAR from Bintray:
-
- [ ![Download](https://api.bintray.com/packages/lenz/maven/SlicedBread/images/download.png) ](https://bintray.com/lenz/maven/SlicedBread/_latestVersion)
-
-When developing, we suggest downloading the the ''-sources'' and ''-javadoc'' JARs as well so you have everything in your IDE.
 
 
 License
