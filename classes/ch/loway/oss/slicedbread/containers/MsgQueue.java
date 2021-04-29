@@ -101,9 +101,11 @@ public class MsgQueue {
     }
 
     /**
-     * Gets the size of the mailbox (for debugging purpouses mostly).
-     * Do not overuse - this is a linked list, so this is pretty expensive.
-     * 
+     * Gets the size of the mailbox.
+     *
+     * As this is backed by a LinkedList, the size operation ios very cheap, as it is cached within the object itself (at least on OpenJDK).
+     * I thought this would be very expensive, but it's not! 
+     *
      * @return the size.
      */
 
